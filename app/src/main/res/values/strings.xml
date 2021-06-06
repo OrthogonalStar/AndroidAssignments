@@ -2,4 +2,10 @@
     <string name="app_name">AndroidAssignments</string>
     <string name="hello_message">Hello World!</string>
     <string name="button_text">I\'m a button</string>
+    <string name="login_text">Login</string>
+    <string name="login_hint">login name</string>
+    <string name="password_text">password</string>
+    <string name="radio_button">RadioButton</string>
+    <string name="check_box">CheckBox</string>
+    <string name="switch_text">What does this do?</string>
 </resources>
