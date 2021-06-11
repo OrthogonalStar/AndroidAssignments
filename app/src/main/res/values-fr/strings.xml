@@ -9,4 +9,8 @@
     <string name="radio_button">RadioBouton</string>
     <string name="check_box">Case a Cocher</string>
     <string name="switch_text">Quesque ca fait?</string>
+    <string name="dialog_message">Esque vous vouler finir cette activite?</string>
+    <string name="dialog_title">Option de finit</string>
+    <string name="ok">Oui</string>
+    <string name="cancel">Annuler</string>
 </resources>
