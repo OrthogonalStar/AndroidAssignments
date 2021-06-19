@@ -13,4 +13,9 @@
     <string name="dialog_title">Option de finit</string>
     <string name="ok">Oui</string>
     <string name="cancel">Annuler</string>
+    <string name="switch_on">Interrupteur Ouvert</string>
+    <string name="switch_off">Interrupteur Ferme</string>
+    <string name="message_return">Ici est ma reponse</string>
+    <string name="chat_button_text">Commence Parler</string>
+    <string name="send_text">Envoyer</string>
 </resources>

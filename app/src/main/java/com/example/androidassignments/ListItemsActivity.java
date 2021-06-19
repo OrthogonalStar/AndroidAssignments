@@ -45,13 +45,13 @@ public class ListItemsActivity extends AppCompatActivity {
         sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                CharSequence text;
+                int text;
                 int duration;
                 if (isChecked){
-                    text = "Switch is On";
+                    text = R.string.switch_on;
                     duration = Toast.LENGTH_SHORT;
                 } else{
-                    text = "Switch is Off";
+                    text = R.string.switch_off;
                     duration = Toast.LENGTH_LONG;
                 }
                 Toast toast = Toast.makeText(ListItemsActivity.this, text, duration);
@@ -70,7 +70,7 @@ public class ListItemsActivity extends AppCompatActivity {
                         .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 Intent intent = new Intent();
-                                intent.putExtra("Response", "Here is my response");
+                                intent.putExtra("Response", R.string.message_return);
                                 setResult(Activity.RESULT_OK, intent);
                                 finish();
                             }
