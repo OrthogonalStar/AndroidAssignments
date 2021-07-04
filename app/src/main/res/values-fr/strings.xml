@@ -18,4 +18,21 @@
     <string name="message_return">Ici est ma reponse</string>
     <string name="chat_button_text">Commence Parler</string>
     <string name="send_text">Envoyer</string>
+    <string name="title_activity_test_toolbar">TestToolbar</string>
+
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Prochain</string>
+    <string name="previous">Dernier</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="toolbar_button_text">Toolbar</string>
+    <string name="toolbar_dialog_title">Esque vous vouler retourner?</string>
+
+    <string name="floating_button_text">Vous appuyez sur le bouton d\'action flottant! Bien fait!</string>
+    <string name="base_snackbar_text">Vous avez sélectionné l\'élément 1.</string>
+
+    <string name="about_toast_text">Version 1.0, by Awstin Chubb</string>
 </resources>

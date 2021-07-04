@@ -17,4 +17,21 @@
     <string name="message_return">Here is my response</string>
     <string name="chat_button_text">Start Chat</string>
     <string name="send_text">Send</string>
+
+    <string name="title_activity_test_toolbar">TestToolbar</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="toolbar_button_text">Toolbar</string>
+    <string name="toolbar_dialog_title">Do you want to go back?</string>
+
+    <string name="floating_button_text">"You have hit the floating action button! Well done!"</string>
+    <string name="base_snackbar_text">"You selected item 1"</string>
+
+    <string name="about_toast_text">Version 1.0, by Awstin Chubb</string>
 </resources>

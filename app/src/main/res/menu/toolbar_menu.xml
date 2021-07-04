@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/action_one"
+        android:title="Choice One"
+        android:icon="@drawable/biotech"
+        android:orderInCategory="101"
+        app:showAsAction="always" />
+
+    <item android:id="@+id/action_two"
+        android:title="Choice Two"
+        android:icon="@drawable/infinity"
+        android:orderInCategory="102"
+        app:showAsAction="always" />
+
+    <item android:id="@+id/action_three"
+        android:title="Choice Three"
+        android:icon="@drawable/library"
+        android:orderInCategory="103"
+        app:showAsAction="always" />
+
+    <item android:id="@+id/about"
+        android:title="About"
+        android:orderInCategory="104"
+        app:showAsAction="never" />
+</menu>
