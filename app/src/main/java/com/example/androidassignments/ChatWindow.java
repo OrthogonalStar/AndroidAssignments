@@ -2,8 +2,11 @@ package com.example.androidassignments;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,6 +27,7 @@ public class ChatWindow extends AppCompatActivity {
     Button send;
     ArrayList<String> chatMessages = new ArrayList<String>();
     ChatAdapter messageAdapter;
+    ChatDataBaseHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +41,11 @@ public class ChatWindow extends AppCompatActivity {
 
         txtbox = (EditText) findViewById(R.id.edit_text);
 
+        dbHelper = new ChatDataBaseHelper(this);
+
+        SQLiteDatabase dbRead = dbHelper.getReadableDatabase();
+        SQLiteDatabase dbWrite = dbHelper.getWritableDatabase();
+
         send = (Button) findViewById(R.id.send_button);
         send.setOnClickListener(new View.OnClickListener(){
 
@@ -44,13 +53,31 @@ public class ChatWindow extends AppCompatActivity {
             public void onClick(View v) {
                 String message = txtbox.getText().toString();
                 chatMessages.add(message);
+                ContentValues cValues = new ContentValues();
+                cValues.put(dbHelper.KEY_MESSAGE, message);
+                dbWrite.insert(dbHelper.TABLE_NAME, "NullPlaceholder", cValues);
 
                 messageAdapter.notifyDataSetChanged();
                 txtbox.setText("");
             }
         });
 
+        Cursor dbMessages = dbRead.rawQuery("SELECT * from " + dbHelper.TABLE_NAME, new String[] {});
 
+        dbMessages.moveToFirst();
+
+        int index = dbMessages.getColumnIndex(dbHelper.KEY_MESSAGE);
+
+        while(!dbMessages.isAfterLast()){
+            chatMessages.add(dbMessages.getString(index));
+            Log.i(ACTIVITY_NAME, "SQL MESSAGE:" + dbMessages.getString(index));
+            dbMessages.moveToNext();
+        }
+
+        Log.i(ACTIVITY_NAME, "Cursor's column count =" + dbMessages.getColumnCount());
+        for(int i=0; i < dbMessages.getColumnCount(); i++){
+            Log.i(ACTIVITY_NAME, dbMessages.getColumnName(i));
+        }
     }
 
     @Override
@@ -80,7 +107,9 @@ public class ChatWindow extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        dbHelper.close();
         Log.i(ACTIVITY_NAME, "In onDestroy()");
+
     }
 
     private class ChatAdapter extends ArrayAdapter<String> {
