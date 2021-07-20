@@ -35,4 +35,6 @@
     <string name="base_snackbar_text">Vous avez sélectionné l\'élément 1.</string>
 
     <string name="about_toast_text">Version 1.0, by Awstin Chubb</string>
+
+    <string name="weather_button_text">Weather Forecast</string>
 </resources>

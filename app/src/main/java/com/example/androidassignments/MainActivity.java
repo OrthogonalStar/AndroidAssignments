@@ -8,14 +8,19 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.androidassignments.assignment2.TestToolbar;
 
 public class MainActivity extends AppCompatActivity {
     protected static final String ACTIVITY_NAME = "MainActivity";
-    Button submit, chat, toolbar;
+    Button submit, chat, toolbar, weather;
+    Spinner dropdown;
+    String city = "Ottawa";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +52,39 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Log.i(ACTIVITY_NAME, "User clicked Start Chat");
+                Log.i(ACTIVITY_NAME, "User clicked Toolbar");
                 Intent intent = new Intent(new Intent(MainActivity.this, TestToolbar.class));
                 startActivityForResult(intent, 10);
+            }
+        });
+
+        weather = (Button) findViewById(R.id.weather_button);
+        weather.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Log.i(ACTIVITY_NAME, "User clicked Weather Forecast");
+                Intent intent = new Intent(new Intent(MainActivity.this, WeatherForecast.class));
+                intent.putExtra("city", city);
+                startActivityForResult(intent, 10);
+            }
+        });
+
+        dropdown = findViewById(R.id.city_list);
+        String[] cities = new String[]{"Ottawa", "Toronto", "Vancouver", "Calgary"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, cities);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        dropdown.setAdapter(adapter);
+        dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selection = (String) parent.getItemAtPosition(position);
+                Log.i(ACTIVITY_NAME, "User selected the city " + selection);
+                city = selection;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
     }

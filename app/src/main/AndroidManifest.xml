@@ -8,6 +8,7 @@
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -16,10 +17,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AndroidAssignments">
+        <activity android:name=".WeatherForecast"></activity>
         <activity
             android:name=".assignment2.TestToolbar"
             android:label="@string/title_activity_test_toolbar"
-            android:theme="@style/Theme.AndroidAssignments.NoActionBar"></activity>
+            android:theme="@style/Theme.AndroidAssignments.NoActionBar" />
         <activity android:name=".ChatWindow" />
         <activity android:name=".ListItemsActivity" />
         <activity android:name=".LoginActivity">
