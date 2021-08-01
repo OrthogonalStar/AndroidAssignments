@@ -1,7 +1,9 @@
 package com.example.androidassignments;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -12,11 +14,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -26,8 +31,15 @@ public class ChatWindow extends AppCompatActivity {
     EditText txtbox;
     Button send;
     ArrayList<String> chatMessages = new ArrayList<String>();
+
     ChatAdapter messageAdapter;
     ChatDataBaseHelper dbHelper;
+    Cursor dbMessages;
+    SQLiteDatabase dbRead;
+    SQLiteDatabase dbWrite;
+
+    boolean frameExists = false;
+    FrameLayout frame;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,8 +55,8 @@ public class ChatWindow extends AppCompatActivity {
 
         dbHelper = new ChatDataBaseHelper(this);
 
-        SQLiteDatabase dbRead = dbHelper.getReadableDatabase();
-        SQLiteDatabase dbWrite = dbHelper.getWritableDatabase();
+        dbRead = dbHelper.getReadableDatabase();
+        dbWrite = dbHelper.getWritableDatabase();
 
         send = (Button) findViewById(R.id.send_button);
         send.setOnClickListener(new View.OnClickListener(){
@@ -56,28 +68,47 @@ public class ChatWindow extends AppCompatActivity {
                 ContentValues cValues = new ContentValues();
                 cValues.put(dbHelper.KEY_MESSAGE, message);
                 dbWrite.insert(dbHelper.TABLE_NAME, "NullPlaceholder", cValues);
+                dbMessages = dbRead.rawQuery("SELECT * from " + dbHelper.TABLE_NAME, new String[] {});
 
                 messageAdapter.notifyDataSetChanged();
                 txtbox.setText("");
             }
         });
 
-        Cursor dbMessages = dbRead.rawQuery("SELECT * from " + dbHelper.TABLE_NAME, new String[] {});
+        dbMessages = dbRead.rawQuery("SELECT * from " + dbHelper.TABLE_NAME, new String[] {});
 
-        dbMessages.moveToFirst();
+        fillChatList();
 
-        int index = dbMessages.getColumnIndex(dbHelper.KEY_MESSAGE);
-
-        while(!dbMessages.isAfterLast()){
-            chatMessages.add(dbMessages.getString(index));
-            Log.i(ACTIVITY_NAME, "SQL MESSAGE:" + dbMessages.getString(index));
-            dbMessages.moveToNext();
+        if(findViewById(R.id.frame_layout) != null){
+            Log.i(ACTIVITY_NAME, "found frame layout");
+            frameExists = true;
+            frame = findViewById(R.id.frame_layout);
         }
 
-        Log.i(ACTIVITY_NAME, "Cursor's column count =" + dbMessages.getColumnCount());
-        for(int i=0; i < dbMessages.getColumnCount(); i++){
-            Log.i(ACTIVITY_NAME, dbMessages.getColumnName(i));
-        }
+        lst.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
+            @Override
+            public void onItemClick(AdapterView parent, View view,int position, long id) {
+                //tablet
+                Bundle mInfo = new Bundle();
+                mInfo.putInt("id", (int)id);
+                mInfo.putString("message", dbMessages.getString(dbMessages.getColumnIndex(dbHelper.KEY_MESSAGE)));
+                if (frameExists) {
+                    Log.i(ACTIVITY_NAME,"Started Side Bar");
+                    MessageFragment msgFragment = new MessageFragment(ChatWindow.this);
+                    msgFragment.setArguments(mInfo);
+                    FragmentTransaction ft =
+                            getSupportFragmentManager().beginTransaction();
+                    ft.replace(R.id.frame_layout, msgFragment);
+                    ft.commit();
+                }else{
+                    Intent i = new Intent(ChatWindow.this, MessageDetails.class);
+                    i.putExtras(mInfo);
+                    startActivityForResult(i, 11);
+                }
+
+            }
+        });
     }
 
     @Override
@@ -112,6 +143,40 @@ public class ChatWindow extends AppCompatActivity {
 
     }
 
+    protected void fillChatList(){
+        dbMessages.moveToFirst();
+
+        int index = dbMessages.getColumnIndex(dbHelper.KEY_MESSAGE);
+        chatMessages.clear();
+
+        while(!dbMessages.isAfterLast()){
+            chatMessages.add(dbMessages.getString(index));
+            Log.i(ACTIVITY_NAME, "SQL MESSAGE:" + dbMessages.getString(index));
+            dbMessages.moveToNext();
+        }
+
+        Log.i(ACTIVITY_NAME, "Cursor's column count =" + dbMessages.getColumnCount());
+        for(int i=0; i < dbMessages.getColumnCount(); i++){
+            Log.i(ACTIVITY_NAME, dbMessages.getColumnName(i));
+        }
+    }
+
+    protected void deleteMessage(int id){
+        dbHelper.deleteMessage(dbWrite, (long) id);
+        dbMessages = dbRead.rawQuery("SELECT * from " + dbHelper.TABLE_NAME, new String[] {});
+        fillChatList();
+        messageAdapter.notifyDataSetChanged();
+    }
+
+    protected void onActivityResult(int requestCode, int responseCode, Intent data) {
+
+        super.onActivityResult(requestCode, responseCode, data);
+
+        if(requestCode == 11 && responseCode == Activity.RESULT_OK){
+            deleteMessage(data.getIntExtra("id", 0));
+        }
+    }
+
     private class ChatAdapter extends ArrayAdapter<String> {
 
         public ChatAdapter(Context ctx){
@@ -142,6 +207,11 @@ public class ChatWindow extends AppCompatActivity {
             message.setText(getItem(pos));
 
             return result;
+        }
+
+        public long getItemId(int position){
+            dbMessages.moveToPosition(position);
+            return dbMessages.getInt(dbMessages.getColumnIndex(dbHelper.KEY_ID));
         }
     }
 }
